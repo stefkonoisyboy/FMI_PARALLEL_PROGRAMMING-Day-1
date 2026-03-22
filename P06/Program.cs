@@ -3,6 +3,7 @@
 class Program
 {
     static int balance = 1000;
+    static object lockObject = new object();
     
     static void Main(string[] args)
     {
@@ -17,7 +18,10 @@ class Program
         
         // Add as many operations as you want
         
-        Console.WriteLine($"Balance: {balance}");
+        lock (lockObject)
+        {
+            Console.WriteLine($"Balance: {balance}");
+        }
         
         Console.WriteLine("End of my console app");
     }
@@ -25,12 +29,20 @@ class Program
     static void Withdraw(object obj)
     {
         int amount = (int)obj;
-        balance -= amount;
+
+        lock (lockObject)
+        {
+            balance -= amount;
+        }
     }
     
     static void Deposit(object obj)
     {
         int amount = (int)obj;
-        balance += amount;
+
+        lock (lockObject)
+        {
+            balance += amount;
+        }
     }
 }

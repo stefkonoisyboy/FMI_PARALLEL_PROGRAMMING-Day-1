@@ -3,6 +3,7 @@
 class Program
 {
     static List<int> maxNumbers = new List<int>();
+    static object lockObject = new object();
     
     static void Main(string[] args)
     {
@@ -25,8 +26,11 @@ class Program
             thread.Join();
         }
         
-        int globalMax = maxNumbers.Max();
-        Console.WriteLine($"Global Max: {globalMax}");
+        lock (lockObject)
+        {
+            int globalMax = maxNumbers.Max();
+            Console.WriteLine($"Global Max: {globalMax}");
+        }
 
         Console.WriteLine("End of my console app");
     }
@@ -35,7 +39,12 @@ class Program
     {
         int[] numbers = (int[])obj;
         int max = numbers.Max();
+        
         Console.WriteLine($"Thread Max: {max}");
-        maxNumbers.Add(max);
+
+        lock (lockObject)
+        {
+            maxNumbers.Add(max);
+        }
     }
 }

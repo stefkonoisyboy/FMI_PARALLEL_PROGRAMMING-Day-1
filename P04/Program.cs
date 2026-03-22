@@ -3,6 +3,10 @@
 class Program
 {
     static List<int> numbers = new List<int>();
+    static Random random = new Random();
+    
+    static object lockObject = new object();
+    static object lockRandom = new object();
     
     static void Main(string[] args)
     {
@@ -20,14 +24,26 @@ class Program
             thread.Join();
         }
 
-        Console.WriteLine("Sum: " + numbers.Sum());
+        lock (lockObject)
+        {
+            Console.WriteLine("Sum: " + numbers.Sum());
+        }
     }
     
     static void AddRandomNumber()
     {
-        Random random = new Random();
-        int number = random.Next(1, 501);
-        numbers.Add(number);
+        int number;
+        
+        lock (lockRandom)
+        {
+            number = random.Next(1, 501);
+        }
+        
         Console.WriteLine($"Added: {number}");
+        
+        lock (lockObject)
+        {
+            numbers.Add(number);
+        }
     }
 }
