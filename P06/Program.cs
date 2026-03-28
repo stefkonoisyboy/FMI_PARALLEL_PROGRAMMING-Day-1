@@ -15,7 +15,7 @@ class Program
         
         withdrawThread.Join();
         depositThread.Join();
-        
+        //didi mnogo obicha stefche <3
         // Add as many operations as you want
         
         lock (lockObject)
